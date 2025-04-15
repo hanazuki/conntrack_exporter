@@ -18,7 +18,7 @@ module ConntrackExporter
       prom = Prometheus::Client::Registry.new
       collect_pcpu_stat(prom)
 
-      content_type 'text/plain; version=0.0.4'
+      content_type 'text/plain'
       Prometheus::Client::Formats::Text.marshal(prom)
     end
 
