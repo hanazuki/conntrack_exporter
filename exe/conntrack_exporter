@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'puma'
+require 'puma/launcher'
+require 'conntrack_exporter'
+
+ENV['APP_ENV'] = 'production'
+
+conf = Puma::Configuration.new do |config|
+  config.threads(1, 10)
+  config.app(ConntrackExporter::App)
+
+  config.environment 'deployment'
+
+  OptParse.new do |o|
+    o.on('--dev') { ENV['APP_ENV'] = 'development' }
+    o.on('-b URI', '--bind', String) { config.bind it }
+  end.parse!(ARGV)
+end
+
+Puma::Launcher.new(conf, log_writer: Puma::LogWriter.stdio).run
