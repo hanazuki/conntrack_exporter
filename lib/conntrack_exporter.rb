@@ -10,6 +10,8 @@ Conntrack = Ynl::Family.build(File.join(__dir__, '../linux/conntrack.yaml'))
 
 module ConntrackExporter
   class App < Sinatra::Base
+    set :host_authorization, { permitted_hosts: [] }
+
     PCPU_METRICS = Conntrack::AttributeSets::ConntrackStatsAttrs::BY_NAME.keys.freeze
 
     get '/metrics' do
