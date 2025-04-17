@@ -11,3 +11,7 @@ gem "rspec", "~> 3.0"
 git 'https://github.com/hanazuki/nl' do
   gem 'ynl'
 end
+
+gem 'csv'
+gem 'json'
+gem 'open-uri'
