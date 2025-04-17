@@ -16,7 +16,7 @@ module ConntrackExporter
 
     PROTOCOLS = JSON.load_file(File.join(__dir__, '../iana/protocol-numbers.json')).transform_keys!(&:to_i)
     CONNLABELS = ->() do
-      open('/etc/connlabels.conf') do |f|
+      open('/etc/connlabel.conf') do |f|
         f.each_line(chomp: true).filter_map do |l|
           l.gsub!(/\#.*/)
           num, name = l.split(/\s+/, 2)
