@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    conntrack_exporter (0.1.0)
+    conntrack_exporter (0.0.0)
       nl-linux (= 0.2.2)
       prometheus-client
       puma
