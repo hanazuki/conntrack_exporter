@@ -1,4 +1,4 @@
-require 'ynl'
+require 'nl/linux'
 require 'prometheus/client'
 require 'prometheus/client/formats/text'
 
@@ -6,7 +6,7 @@ require_relative 'conntrack_exporter/version'
 
 require 'sinatra/base'
 
-Conntrack = Ynl::Family.build(File.join(__dir__, '../linux/conntrack.yaml'))
+Conntrack = Nl::Linux::Conntrack
 
 module ConntrackExporter
   class App < Sinatra::Base
@@ -45,11 +45,10 @@ module ConntrackExporter
       end
 
       Conntrack.open(&:dump_get_stats).each do |msg|
-        h = msg.to_h
-        cpu = h[:res_id]
+        cpu = msg.res_id
 
         counters.each do |metric, counter|
-          if val = h[metric]
+          if val = msg.attributes[metric]&.value
             counter.increment(by: val, labels: {cpu:})
           end
         end
@@ -79,13 +78,12 @@ module ConntrackExporter
       labelled_entries = Prometheus::Client::Counter.new(:conntrack_labelled_entries, docstring: "Conntrack labelled entries", labels: %i[l3proto l4proto label])
       prom.register(labelled_entries)
 
-
       Conntrack.open(&:dump_get).each do |msg|
-        h = msg.to_h
+        attrs = msg.attributes
 
-        l3proto = l3proto_name(h[:nfgen_family])
-        l4proto = l4proto_name(h.dig(:tuple_orig, :tuple_proto, :proto_num))
-        connlabels = h[:labels]&.then do |str|
+        l3proto = l3proto_name(msg.nfgen_family)
+        l4proto = l4proto_name(msg.tuple_orig[:tuple_proto].value[:proto_num].value)
+        connlabels = attrs[:labels]&.value&.then do |str|
           str.unpack('c*').each_with_index.flat_map do |c, i|
             8.times.filter_map do |j|
               connlabel_name(i * 8 + j) if c[j] == 1
