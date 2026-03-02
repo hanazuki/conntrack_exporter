@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.summary = "conntrack_exporter"
   spec.description = "conntrack_exporter"
   spec.homepage = "https://github.com/hanazuki/conntrack_exporter"
-  spec.license = "MIT AND BSD-3-Clause"
+  spec.license = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
   # Specify which files should be added to the gem when it is released.
