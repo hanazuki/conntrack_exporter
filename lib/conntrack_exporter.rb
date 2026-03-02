@@ -1,3 +1,4 @@
+require 'socket'
 require 'nl/linux'
 require 'prometheus/client'
 require 'prometheus/client/formats/text'
@@ -57,8 +58,8 @@ module ConntrackExporter
 
     private def l3proto_name(nfgen_family)
       case protonum = nfgen_family
-      when 2; 'IPv4'
-      when 10; 'IPv6'
+      when Socket::AF_INET; 'IPv4'
+      when Socket::AF_INET6; 'IPv6'
       else nfgen_family
       end
     end
