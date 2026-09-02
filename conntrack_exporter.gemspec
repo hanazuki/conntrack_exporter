@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "puma"
   spec.add_dependency "sinatra"
-  spec.add_dependency "nl-linux", '0.2.2'
+  spec.add_dependency "nl-linux", '0.3.0'
   spec.add_dependency "prometheus-client"
 end
