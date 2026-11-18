@@ -49,7 +49,7 @@ module ConntrackExporter
         cpu = msg.res_id
 
         counters.each do |metric, counter|
-          if val = msg.attributes[metric]&.value
+          if val = msg[metric]
             counter.increment(by: val, labels: {cpu:})
           end
         end
@@ -80,11 +80,9 @@ module ConntrackExporter
       prom.register(labelled_entries)
 
       Conntrack.open(&:dump_get).each do |msg|
-        attrs = msg.attributes
-
         l3proto = l3proto_name(msg.nfgen_family)
-        l4proto = l4proto_name(msg.tuple_orig[:tuple_proto].value[:proto_num].value)
-        connlabels = attrs[:labels]&.value&.then do |str|
+        l4proto = l4proto_name(msg.tuple_orig.tuple_proto.proto_num)
+        connlabels = msg.labels&.then do |str|
           str.unpack('c*').each_with_index.flat_map do |c, i|
             8.times.filter_map do |j|
               connlabel_name(i * 8 + j) if c[j] == 1
