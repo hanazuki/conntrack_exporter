@@ -19,7 +19,11 @@ jobs:
           - '4.0'
     steps:
       - name: Enable unprivileged user namespaces
-        run: sudo sysctl -w kernel.unprivileged_userns_clone=1
+        run: |
+          # Ubuntu also restricts user namespace capabilities through AppArmor.
+          sudo sysctl -w \
+            kernel.unprivileged_userns_clone=1 \
+            kernel.apparmor_restrict_unprivileged_userns=0
       - name: Install conntrack tools
         run: sudo apt-get update && sudo apt-get install -y conntrack
       - uses: actions/checkout@v4
