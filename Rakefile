@@ -5,6 +5,13 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
+desc 'Test real conntrack metrics in a fresh network namespace (requires conntrack and unshare)'
+task 'spec:integration' do
+  flags = Process.uid.zero? ? [] : %w[--user --map-root-user]
+  sh({ 'CONNTRACK_TEST_HOST_NETNS' => File.readlink('/proc/self/ns/net') },
+     'unshare', *flags, '--net', 'bundle', 'exec', 'rspec', 'integration')
+end
+
 task default: :spec
 
 task :'update:protocols' do

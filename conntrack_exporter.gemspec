@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = "conntrack_exporter"
   spec.homepage = "https://github.com/hanazuki/conntrack_exporter"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.3.0"
+  spec.required_ruby_version = ">= 3.4"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "puma"
   spec.add_dependency "sinatra"
-  spec.add_dependency "nl-linux", '0.3.0'
+  spec.add_dependency "nl-linux", '0.5.0'
   spec.add_dependency "prometheus-client"
 end
